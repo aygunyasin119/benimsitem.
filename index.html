@@ -1,32 +1,24 @@
-# benimsitem.
-disiplin
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Ultra Pro Web Site</title>
+<title>FINAL BOSS SITE</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
   transition:0.3s;
+  scroll-behavior:smooth;
 }
 
 .light{background:#f4f4f4;color:#000;}
 .dark{background:#121212;color:#fff;}
 
-header{
-  background:linear-gradient(90deg,#3498db,#8e44ad);
-  color:white;
-  text-align:center;
-  padding:30px;
-}
-
-/* NAV */
 nav{
-  position:sticky;
+  position:fixed;
   top:0;
+  width:100%;
   background:#111;
   display:flex;
   justify-content:center;
@@ -37,115 +29,173 @@ nav a{
   padding:15px;
   text-decoration:none;
 }
-
 nav a:hover{background:#1abc9c;}
 
-/* CARD */
-.card{
+header{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(120deg,#3498db,#8e44ad);
+  color:white;
+}
+
+section{
   width:80%;
-  margin:20px auto;
-  padding:20px;
-  border-radius:10px;
+  margin:80px auto;
+}
+
+.card{
   background:white;
+  padding:20px;
+  margin:15px 0;
+  border-radius:10px;
   box-shadow:0 3px 10px rgba(0,0,0,0.2);
-  transition:0.3s;
 }
 
 .dark .card{background:#1e1e1e;}
 
-.card:hover{
-  transform:scale(1.02);
-}
-
-/* BUTTON */
 button{
   padding:10px;
   border:none;
-  border-radius:5px;
   background:#3498db;
   color:white;
   cursor:pointer;
+  border-radius:5px;
 }
 
 button:hover{background:#1abc9c;}
 
-/* FORM */
-input,textarea{
+.popup{
+  display:none;
+  position:fixed;
   width:100%;
-  padding:10px;
-  margin:5px 0;
+  height:100%;
+  background:rgba(0,0,0,0.6);
 }
 
-footer{
+.popup-content{
+  background:white;
+  width:300px;
+  margin:15% auto;
+  padding:20px;
   text-align:center;
-  padding:15px;
-  background:#000;
-  color:white;
+  border-radius:10px;
+}
+
+input{
+  padding:10px;
+  margin:5px;
+  width:80%;
 }
 </style>
 </head>
 
 <body class="light">
 
-<header>
-  <h1>🚀 Ultra Pro Site</h1>
-  <p>HTML + CSS + JS Proje</p>
-  <button onclick="mode()">🌙 Mod Değiştir</button>
-</header>
-
 <nav>
   <a href="#home">Ana</a>
-  <a href="#about">Hakkımda</a>
-  <a href="#projects">Projeler</a>
+  <a href="#game">Oyun</a>
+  <a href="#quiz">Quiz</a>
   <a href="#contact">İletişim</a>
 </nav>
 
-<div class="card" id="home">
-  <h2>🏠 Ana Sayfa</h2>
-  <p>Bu site ileri seviye web projesidir.</p>
-  <p id="counter">Ziyaretçi: 0</p>
-</div>
+<header id="home">
+  <h1>🔥 FINAL BOSS SITE</h1>
+  <p id="typing"></p>
 
-<div class="card" id="about">
-  <h2>👤 Hakkımda</h2>
-  <p>Adım: Halil</p>
-  <p>Web geliştirme öğreniyorum.</p>
-</div>
+  <button onclick="mode()">🌙 Mod</button>
+</header>
 
-<div class="card" id="projects">
-  <h2>💻 Projeler</h2>
-  <ul>
-    <li>Site tasarımı</li>
-    <li>Mini oyun</li>
-    <li>HTML projeleri</li>
-  </ul>
-</div>
+<section id="game">
+  <h2>🎮 Mini Oyun</h2>
+  <div class="card">
+    <p>0–10 arası sayı tahmin et:</p>
+    <input id="guess">
+    <button onclick="game()">Tahmin Et</button>
+    <p id="gameResult"></p>
+  </div>
+</section>
 
-<div class="card" id="contact">
+<section id="quiz">
+  <h2>🧠 Quiz</h2>
+  <div class="card">
+    <p>HTML ne demek?</p>
+    <button onclick="q(1)">Doğru</button>
+    <button onclick="q(0)">Yanlış</button>
+    <p id="score">Skor: 0</p>
+  </div>
+</section>
+
+<section id="contact">
   <h2>📧 İletişim</h2>
+  <div class="card">
+    <input id="name" placeholder="Ad">
+    <input id="mail" placeholder="E-posta">
+    <button onclick="send()">Gönder</button>
+  </div>
+</section>
 
-  <input placeholder="Adın">
-  <input placeholder="E-posta">
-  <textarea placeholder="Mesaj"></textarea>
-  <button onclick="alert('Mesaj gönderildi!')">Gönder</button>
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popup-content">
+    <h3>✔ Gönderildi</h3>
+    <button onclick="closeP()">OK</button>
+  </div>
 </div>
-
-<footer>
-  © 2026 Ultra Pro Site
-</footer>
 
 <script>
-let count = 0;
 
+let t="Bu site FINAL BOSS seviyesidir 😎";
+let i=0;
+
+function type(){
+  if(i<t.length){
+    document.getElementById("typing").innerHTML+=t[i];
+    i++;
+    setTimeout(type,50);
+  }
+}
+type();
+
+// DARK MODE
 function mode(){
   document.body.classList.toggle("dark");
   document.body.classList.toggle("light");
 }
 
-setInterval(()=>{
-  count++;
-  document.getElementById("counter").innerText = "Ziyaretçi: " + count;
-},2000);
+// OYUN
+let rnd = Math.floor(Math.random()*10);
+
+function game(){
+  let g=document.getElementById("guess").value;
+
+  if(g==rnd){
+    document.getElementById("gameResult").innerText="Doğru bildin 🎉";
+  }else{
+    document.getElementById("gameResult").innerText="Yanlış 😅 sayı: "+rnd;
+  }
+  rnd=Math.floor(Math.random()*10);
+}
+
+// QUIZ
+let score=0;
+
+function q(a){
+  if(a==1) score++;
+  document.getElementById("score").innerText="Skor: "+score;
+}
+
+// FORM
+function send(){
+  document.getElementById("popup").style.display="block";
+}
+
+function closeP(){
+  document.getElementById("popup").style.display="none";
+}
+
 </script>
 
 </body>
