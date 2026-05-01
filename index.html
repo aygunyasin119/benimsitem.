@@ -2,198 +2,276 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>ULTIMATE PORTAL</title>
+<title>PRO MAX WEB APP</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  scroll-behavior:smooth;
+  transition:0.3s;
 }
 
-/* NAV */
-nav{
+/* THEMES */
+.light{background:#f4f4f4;color:#000;}
+.dark{background:#1e1e1e;color:#fff;}
+
+/* SIDEBAR */
+.sidebar{
   position:fixed;
-  top:0;
+  width:220px;
+  height:100vh;
+  background:#111;
+  padding-top:20px;
+}
+
+.sidebar button{
   width:100%;
-  background:#111;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-nav a{
-  color:white;
   padding:10px;
-  text-decoration:none;
-}
-
-nav a:hover{
-  background:#1abc9c;
-}
-
-/* SECTIONS */
-section{
-  padding:80px 20px;
-  min-height:100vh;
-}
-
-#home{background:#3498db;color:white;}
-#about{background:#2ecc71;color:white;}
-#news{background:#9b59b6;color:white;}
-#blog{background:#e67e22;color:white;}
-#gallery{background:#e74c3c;color:white;}
-#game{background:#16a085;color:white;}
-#quiz{background:#8e44ad;color:white;}
-#tools{background:#34495e;color:white;}
-#settings{background:#7f8c8d;color:white;}
-#contact{background:#2c3e50;color:white;}
-
-.box{
-  background:white;
-  color:black;
-  padding:20px;
-  border-radius:10px;
-  width:80%;
-  margin:auto;
-}
-
-input{
-  padding:10px;
-}
-
-button{
-  padding:10px;
-  background:#111;
+  background:none;
   color:white;
   border:none;
   cursor:pointer;
 }
+
+.sidebar button:hover{
+  background:#1abc9c;
+}
+
+/* CONTENT */
+.content{
+  margin-left:230px;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+}
+
+.dark .card{background:#333;color:white;}
+
+/* INPUT */
+input{
+  padding:10px;
+  margin:5px;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#000;
+  color:#fff;
+  padding:10px;
+  display:none;
+}
 </style>
 </head>
 
-<body>
+<body class="light">
 
-<nav>
-  <a href="#home">Ana</a>
-  <a href="#about">Hakkımda</a>
-  <a href="#news">Haber</a>
-  <a href="#blog">Blog</a>
-  <a href="#gallery">Galeri</a>
-  <a href="#game">Oyun</a>
-  <a href="#quiz">Quiz</a>
-  <a href="#tools">Araçlar</a>
-  <a href="#settings">Ayarlar</a>
-  <a href="#contact">İletişim</a>
-</nav>
-
-<section id="home">
-<h1>🏠 DASHBOARD</h1>
-<div class="box">Ultimate Portal 😎</div>
-</section>
-
-<section id="about">
-<h1>👤 Hakkımda</h1>
-<div class="box">
-Ad: Halil<br>
-Soyad: Aygün<br>
-E-posta: example@gmail.com
+<div class="sidebar">
+  <button onclick="show('home')">🏠 Dashboard</button>
+  <button onclick="show('game')">🎮 Oyun</button>
+  <button onclick="show('quiz')">🧠 Quiz</button>
+  <button onclick="show('tools')">🧰 Araçlar</button>
+  <button onclick="show('stats')">📊 İstatistik</button>
+  <button onclick="show('robot')">🤖 Robot</button>
+  <button onclick="theme()">🌙 Tema</button>
 </div>
-</section>
 
-<section id="news">
-<h1>📰 Haberler</h1>
-<div class="box">Yeni site yapıldı 🚀</div>
-</section>
+<div class="content">
 
-<section id="blog">
-<h1>📝 Blog</h1>
-<div class="box">Yazı alanı</div>
-</section>
-
-<section id="gallery">
-<h1>🖼 Galeri</h1>
-<div class="box">Fotoğraflar</div>
-</section>
-
-<section id="game">
-<h1>🎮 Oyun</h1>
-<div class="box">
-<input id="g">
-<button onclick="game()">Tahmin</button>
-<p id="r"></p>
+<!-- DASHBOARD -->
+<div id="home">
+  <h1>📊 DASHBOARD</h1>
+  <div class="card">👤 Kullanıcı: Admin</div>
+  <div class="card">🎯 Skor: <span id="score">0</span></div>
 </div>
-</section>
 
-<section id="quiz">
-<h1>🧠 Quiz</h1>
-<div class="box">
-HTML nedir?<br>
-<button onclick="q(1)">Dil</button>
-<button onclick="q(0)">Oyun</button>
+<!-- GAME -->
+<div id="game" style="display:none">
+  <h1>🎮 Oyun</h1>
+  <div class="card">
+    <input id="g">
+    <button onclick="game()">Tahmin</button>
+    <p id="r"></p>
+  </div>
 </div>
-</section>
 
-<section id="tools">
-<h1>🧠 Araçlar</h1>
-<div class="box">
-<input id="n">
-<button onclick="add()">Ekle</button>
-<ul id="list"></ul>
+<!-- QUIZ -->
+<div id="quiz" style="display:none">
+  <h1>🧠 Quiz</h1>
+  <div class="card">
+    HTML nedir?<br>
+    <button onclick="q(1)">Dil</button>
+    <button onclick="q(0)">Oyun</button>
+  </div>
 </div>
-</section>
 
-<section id="settings">
-<h1>⚙ Ayarlar</h1>
-<div class="box">
-<button onclick="theme()">Tema değiştir</button>
-</div>
-</section>
+<!-- TOOLS -->
+<div id="tools" style="display:none">
+  <h1>🧰 Araçlar</h1>
 
-<section id="contact">
-<h1>📧 İletişim</h1>
-<div class="box">
-<input placeholder="Ad">
-<input placeholder="E-posta">
-<button onclick="alert('Gönderildi ✔')">Gönder</button>
+  <div class="card">
+    🎲 Zar
+    <button onclick="dice()">At</button>
+    <p id="dice_r"></p>
+  </div>
+
+  <div class="card">
+    ⏱ Sayaç
+    <button onclick="start()">Başlat</button>
+    <p id="t">0</p>
+  </div>
+
+  <div class="card">
+    🔐 Şifre
+    <button onclick="gen()">Üret</button>
+    <p id="p"></p>
+  </div>
+
+  <div class="card">
+    📝 Not
+    <input id="n">
+    <button onclick="add()">Ekle</button>
+    <ul id="list"></ul>
+  </div>
 </div>
-</section>
+
+<!-- STATS -->
+<div id="stats" style="display:none">
+  <h1>📊 İSTATİSTİK</h1>
+  <div class="card">
+    Oyun sayısı: <span id="games">0</span><br>
+    Not sayısı: <span id="notes">0</span>
+  </div>
+</div>
+
+<!-- ROBOT -->
+<div id="robot" style="display:none">
+  <h1>🤖 Robot</h1>
+  <div class="card">
+    <input id="msg">
+    <button onclick="robot()">Gönder</button>
+    <p id="reply"></p>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 
+let score = localStorage.getItem("score") || 0;
+let games = localStorage.getItem("games") || 0;
+let notesCount = localStorage.getItem("notes") || 0;
+
 let num = Math.floor(Math.random()*10);
+
+// NAV
+function show(id){
+  ["home","game","quiz","tools","stats","robot"].forEach(x=>{
+    document.getElementById(x).style.display="none";
+  });
+  document.getElementById(id).style.display="block";
+}
 
 // GAME
 function game(){
   let x=document.getElementById("g").value;
 
   if(x==num){
-    document.getElementById("r").innerText="Doğru 🎉";
+    score++;
+    notify("Doğru 🎉");
   }else{
-    document.getElementById("r").innerText="Yanlış 😅";
+    notify("Yanlış 😅");
   }
+
+  localStorage.setItem("score",score);
+  document.getElementById("score").innerText=score;
+
+  games++;
+  localStorage.setItem("games",games);
+  document.getElementById("games").innerText=games;
 
   num=Math.floor(Math.random()*10);
 }
 
 // QUIZ
 function q(a){
-  alert(a==1?"Doğru ✔":"Yanlış ❌");
+  notify(a==1?"Doğru ✔":"Yanlış ❌");
 }
 
-// NOTES
+// ZAR
+function dice(){
+  document.getElementById("dice_r").innerText=
+  Math.floor(Math.random()*6)+1;
+}
+
+// SAYAÇ
+let t=0;
+function start(){
+  setInterval(()=>{
+    t++;
+    document.getElementById("t").innerText=t;
+  },1000);
+}
+
+// ŞİFRE
+function gen(){
+  document.getElementById("p").innerText=
+  Math.random().toString(36).slice(-8);
+}
+
+// NOT
 function add(){
   let v=document.getElementById("n").value;
   let li=document.createElement("li");
   li.innerText=v;
   document.getElementById("list").appendChild(li);
+
+  notesCount++;
+  localStorage.setItem("notes",notesCount);
+  document.getElementById("notes").innerText=notesCount;
+}
+
+// ROBOT
+function robot(){
+  let m=document.getElementById("msg").value.toLowerCase();
+  let r="";
+
+  if(m.includes("merhaba")) r="Selam 😎";
+  else if(m.includes("oyun")) r="Oyun aç 🎮";
+  else if(m.includes("saat")) r=new Date().toLocaleTimeString();
+  else r="Anlamadım 🤔";
+
+  document.getElementById("reply").innerText=r;
 }
 
 // THEME
 function theme(){
-  document.body.style.filter =
-  document.body.style.filter=="invert(1)" ? "invert(0)" : "invert(1)";
+  document.body.classList.toggle("dark");
+  document.body.classList.toggle("light");
 }
+
+// NOTIFY
+function notify(m){
+  let t=document.getElementById("toast");
+  t.innerText=m;
+  t.style.display="block";
+  setTimeout(()=>t.style.display="none",1500);
+}
+
+// LOAD
+document.getElementById("score").innerText=score;
+document.getElementById("games").innerText=games;
+document.getElementById("notes").innerText=notesCount;
 
 </script>
 
