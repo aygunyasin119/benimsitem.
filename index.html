@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>ULTRA PLATFORM V11</title>
+<title>ULTRA PLATFORM V12</title>
 
 <style>
 body{margin:0;font-family:Arial;transition:0.3s;}
@@ -51,6 +51,7 @@ img{max-width:200px;border-radius:10px;}
   <button onclick="show('music')">🎧 Müzik</button>
   <button onclick="show('gallery')">🖼️ Galeri</button>
   <button onclick="show('profile')">👤 Profil</button>
+  <button onclick="show('inspire')">⭐ İlham</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
@@ -67,9 +68,11 @@ img{max-width:200px;border-radius:10px;}
 <div id="games" style="display:none">
   <h1>🎮 Oyunlar</h1>
 
-  <button onclick="guess()">Tahmin</button>
+  <button onclick="guess()">Sayı Tahmin</button>
   <button onclick="reflex()">Refleks</button>
   <button onclick="luck()">Şans</button>
+  <button onclick="typing()">Hızlı Yaz</button>
+  <button onclick="coin()">Para At</button>
 
   <p id="g1"></p>
 </div>
@@ -90,45 +93,49 @@ img{max-width:200px;border-radius:10px;}
 
 <!-- MUSIC -->
 <div id="music" style="display:none">
-  <h1>🎧 Müzik Player</h1>
-
+  <h1>🎧 Müzik</h1>
   <audio controls>
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
   </audio>
-
-  <div class="card">
-    🎵 Chill Track 1
-  </div>
 </div>
 
 <!-- GALLERY -->
 <div id="gallery" style="display:none">
   <h1>🖼️ Galeri</h1>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg">
-    <p>Profil Resmi</p>
-  </div>
-
-  <div class="card">
-    <img src="https://picsum.photos/200/150">
-    <p>Rastgele Görsel</p>
-  </div>
+  <img src="https://picsum.photos/200/150">
+  <img src="https://picsum.photos/201/150">
 </div>
 
 <!-- PROFILE -->
 <div id="profile" style="display:none">
   <h1>👤 Profil</h1>
 
-  <div class="card" style="text-align:center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg">
-
-    <h2 id="name">Yasin</h2>
+  <div class="card">
+    <h2>Yasin</h2>
     <p>📧 aygunyasin123.@gmail.com</p>
-    <p>🎂 18</p>
     <p>🎓 Öğrenci</p>
+    <p>🏆 Skor: <span id="score">0</span></p>
+  </div>
+</div>
 
-    <h3>🏆 Skor: <span id="score">0</span></h3>
+<!-- INSPIRATION -->
+<div id="inspire" style="display:none">
+  <h1>⭐ İlham Aldığım Kişiler</h1>
+
+  <div class="card">
+    <h3>David Goggins</h3>
+    <p>Disiplin ve mental güç örneği</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg">
+  </div>
+
+  <div class="card">
+    <h3>Elon Musk</h3>
+    <p>Teknoloji ve inovasyon</p>
+  </div>
+
+  <div class="card">
+    <h3>Steve Jobs</h3>
+    <p>Basit ama güçlü tasarım</p>
   </div>
 </div>
 
@@ -138,7 +145,6 @@ img{max-width:200px;border-radius:10px;}
 
 let score=0;
 let hp=100;
-let currentUser="";
 
 /* LOGIN */
 function login(){
@@ -146,7 +152,6 @@ function login(){
   let p=document.getElementById("pass").value;
 
   if(u=="Yasin" && p=="3169"){
-    currentUser=u;
     document.getElementById("login").style.display="none";
   }else{
     alert("Hatalı giriş");
@@ -155,7 +160,7 @@ function login(){
 
 /* NAV */
 function show(id){
-  ["feed","games","chat","boss","music","gallery","profile"]
+  ["feed","games","chat","boss","music","gallery","profile","inspire"]
   .forEach(x=>document.getElementById(x).style.display="none");
   document.getElementById(id).style.display="block";
 }
@@ -167,31 +172,37 @@ function addPost(){
 }
 
 /* GAMES */
-function guess(){
-  if(Math.random()>0.5){score+=10;update();}
-}
+function guess(){if(Math.random()>0.5){score+=10;update();}}
 function reflex(){score+=5;update();}
 function luck(){if(Math.random()>0.5){score+=10;update();}}
+
+function typing(){
+  let w="kod";
+  let x=prompt("Yaz: "+w);
+  if(x==w){score+=10;update();}
+}
+
+function coin(){
+  let r=Math.random();
+  alert(r>0.5?"Yazı":"Tura");
+}
 
 /* BOSS */
 function hitBoss(){
   hp-=10;
-  if(hp<=0){
-    score+=50;
-    hp=100;
-  }
+  if(hp<=0){score+=50;hp=100;}
   update();
-}
-
-/* SCORE */
-function update(){
-  document.getElementById("score").innerText=score;
 }
 
 /* CHAT */
 function send(){
   document.getElementById("chatBox").innerHTML+=
   "<div class='card'>"+document.getElementById("msg").value+"</div>";
+}
+
+/* SCORE */
+function update(){
+  document.getElementById("score").innerText=score;
 }
 
 /* THEME */
