@@ -11,20 +11,6 @@ body{
   transition:0.3s;
 }
 
-/* LOGIN SCREEN */
-#login{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:#111;
-  color:white;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
 /* THEME */
 .light{background:#f4f4f4;color:#000;}
 .dark{background:#1e1e1e;color:#fff;}
@@ -76,21 +62,13 @@ input,button{
 
 <body class="light">
 
-<!-- 🔐 LOGIN -->
-<div id="login">
-  <h1>🔐 Giriş</h1>
-  <input id="u" placeholder="Kullanıcı adı">
-  <input id="p" type="password" placeholder="Şifre">
-  <button onclick="login()">Giriş Yap</button>
-  <p id="err"></p>
-</div>
-
 <!-- MENU -->
 <div class="menu">
   <button onclick="show('feed')">📱 Feed</button>
   <button onclick="show('games')">🎮 Oyunlar</button>
   <button onclick="show('tools')">🧰 Araçlar</button>
   <button onclick="show('robot')">🤖 Robot</button>
+  <button onclick="show('about')">👤 Profil</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
@@ -108,7 +86,6 @@ input,button{
 
 <!-- GAMES -->
 <div id="games" style="display:none">
-
   <h1>🎮 Oyunlar</h1>
 
   <div class="card">
@@ -130,12 +107,10 @@ input,button{
     <button onclick="luck()">Çevir</button>
     <p id="luck"></p>
   </div>
-
 </div>
 
 <!-- TOOLS -->
 <div id="tools" style="display:none">
-
   <h1>🧰 Araçlar</h1>
 
   🎲 <button onclick="dice()">Zar</button>
@@ -147,17 +122,45 @@ input,button{
   📝 <input id="note">
   <button onclick="note()">Not Ekle</button>
   <ul id="list"></ul>
-
 </div>
 
 <!-- ROBOT -->
 <div id="robot" style="display:none">
-
   <h1>🤖 Robot</h1>
 
   <input id="msg">
   <button onclick="bot()">Gönder</button>
   <p id="reply"></p>
+</div>
+
+<!-- 👤 PROFILE -->
+<div id="about" style="display:none">
+
+  <h1>👤 Profil</h1>
+
+  <div class="card" style="text-align:center">
+
+    <img 
+      src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
+      style="width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid #1abc9c;"
+    >
+
+    <h2>Halil Yasin Aygün</h2>
+
+    <p>📧 aygunyasin123.@gmail.com</p>
+    <p>🎂 Yaş: 18</p>
+    <p>🎓 Meslek: Öğrenci</p>
+
+    <hr>
+
+    <h3>💪 İlham</h3>
+    <p>David Goggins</p>
+
+    <p style="font-size:14px;opacity:0.8">
+      Disiplin ve mental güç odaklı bir sporcu.
+    </p>
+
+  </div>
 
 </div>
 
@@ -169,21 +172,9 @@ let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let num = Math.floor(Math.random()*10);
 let start;
 
-/* 🔐 LOGIN (SENİN İSTEDİĞİN) */
-function login(){
-  let u=document.getElementById("u").value;
-  let p=document.getElementById("p").value;
-
-  if(u==="Yasin" && p==="3169"){
-    document.getElementById("login").style.display="none";
-  } else {
-    document.getElementById("err").innerText="Hatalı giriş ❌";
-  }
-}
-
 /* NAV */
 function show(id){
-  ["feed","games","tools","robot"].forEach(x=>{
+  ["feed","games","tools","robot","about"].forEach(x=>{
     document.getElementById(x).style.display="none";
   });
   document.getElementById(id).style.display="block";
