@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>ULTRA PLATFORM</title>
+<title>ULTRA PLATFORM V11</title>
 
 <style>
 body{margin:0;font-family:Arial;transition:0.3s;}
@@ -28,20 +28,29 @@ body{margin:0;font-family:Arial;transition:0.3s;}
 .dark .card{background:#333;color:white;}
 
 input,button{padding:10px;margin:5px;width:100%;}
+img{max-width:200px;border-radius:10px;}
 </style>
 </head>
 
 <body class="light">
+
+<!-- LOGIN -->
+<div id="login" style="position:fixed;width:100%;height:100%;background:#000;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+  <h1>🔐 Giriş</h1>
+  <input id="user" placeholder="Kullanıcı adı">
+  <input id="pass" placeholder="Şifre">
+  <button onclick="login()">Giriş</button>
+</div>
 
 <!-- MENU -->
 <div class="menu">
   <button onclick="show('feed')">📱 Feed</button>
   <button onclick="show('games')">🎮 Oyunlar</button>
   <button onclick="show('chat')">💬 Chat</button>
-  <button onclick="show('music')">🎵 Müzik</button>
+  <button onclick="show('boss')">🧟 Boss</button>
+  <button onclick="show('music')">🎧 Müzik</button>
   <button onclick="show('gallery')">🖼️ Galeri</button>
   <button onclick="show('profile')">👤 Profil</button>
-  <button onclick="show('tools')">🗒️ Araçlar</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
@@ -58,16 +67,11 @@ input,button{padding:10px;margin:5px;width:100%;}
 <div id="games" style="display:none">
   <h1>🎮 Oyunlar</h1>
 
-  🎯 <input id="guess"><button onclick="guess()">Tahmin</button><p id="g1"></p>
+  <button onclick="guess()">Tahmin</button>
+  <button onclick="reflex()">Refleks</button>
+  <button onclick="luck()">Şans</button>
 
-  ⚡ <button onclick="refStart()">Refleks</button>
-  <button id="click" onclick="refClick()" style="display:none">Tıkla</button>
-  <p id="g2"></p>
-
-  🎲 <button onclick="luck()">Şans</button><p id="g3"></p>
-
-  🧠 <button onclick="mem()">Hafıza</button>
-  <input id="memIn"><button onclick="memCheck()">Kontrol</button>
+  <p id="g1"></p>
 </div>
 
 <!-- CHAT -->
@@ -77,21 +81,39 @@ input,button{padding:10px;margin:5px;width:100%;}
   <div id="chatBox"></div>
 </div>
 
+<!-- BOSS -->
+<div id="boss" style="display:none">
+  <h1>🧟 Boss</h1>
+  <p>HP: <span id="hp">100</span></p>
+  <button onclick="hitBoss()">Vur</button>
+</div>
+
 <!-- MUSIC -->
 <div id="music" style="display:none">
-  <h1>🎵 Müzik</h1>
+  <h1>🎧 Müzik Player</h1>
 
   <audio controls>
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
   </audio>
+
+  <div class="card">
+    🎵 Chill Track 1
+  </div>
 </div>
 
 <!-- GALLERY -->
 <div id="gallery" style="display:none">
   <h1>🖼️ Galeri</h1>
 
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
-  style="width:200px;border-radius:10px;">
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg">
+    <p>Profil Resmi</p>
+  </div>
+
+  <div class="card">
+    <img src="https://picsum.photos/200/150">
+    <p>Rastgele Görsel</p>
+  </div>
 </div>
 
 <!-- PROFILE -->
@@ -99,114 +121,82 @@ input,button{padding:10px;margin:5px;width:100%;}
   <h1>👤 Profil</h1>
 
   <div class="card" style="text-align:center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
-    style="width:120px;height:120px;border-radius:50%;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg">
 
-    <h2>Halil Yasin Aygün</h2>
+    <h2 id="name">Yasin</h2>
     <p>📧 aygunyasin123.@gmail.com</p>
     <p>🎂 18</p>
     <p>🎓 Öğrenci</p>
+
+    <h3>🏆 Skor: <span id="score">0</span></h3>
   </div>
-</div>
-
-<!-- TOOLS -->
-<div id="tools" style="display:none">
-  <h1>🗒️ Araçlar</h1>
-
-  🎲 <button onclick="dice()">Zar</button><p id="d"></p>
-
-  🔐 <button onclick="pass()">Şifre</button><p id="p"></p>
-
-  📝 <input id="note"><button onclick="addNote()">Not</button>
-  <ul id="list"></ul>
 </div>
 
 </div>
 
 <script>
 
-let posts=[];
-let memory="";
-let start;
 let score=0;
+let hp=100;
+let currentUser="";
+
+/* LOGIN */
+function login(){
+  let u=document.getElementById("user").value;
+  let p=document.getElementById("pass").value;
+
+  if(u=="Yasin" && p=="3169"){
+    currentUser=u;
+    document.getElementById("login").style.display="none";
+  }else{
+    alert("Hatalı giriş");
+  }
+}
 
 /* NAV */
 function show(id){
-  ["feed","games","chat","music","gallery","profile","tools"]
+  ["feed","games","chat","boss","music","gallery","profile"]
   .forEach(x=>document.getElementById(x).style.display="none");
   document.getElementById(id).style.display="block";
 }
 
 /* FEED */
 function addPost(){
-  posts.unshift(document.getElementById("post").value);
-  render();
+  document.getElementById("posts").innerHTML+=
+  "<div class='card'>"+document.getElementById("post").value+"</div>";
 }
-function render(){
-  document.getElementById("posts").innerHTML=
-  posts.map(p=>`<div class="card">${p}</div>`).join("");
-}
-render();
 
-/* GAME */
+/* GAMES */
 function guess(){
-  let n=Math.floor(Math.random()*10);
-  document.getElementById("g1").innerText=
-  (document.getElementById("guess").value==n)?"Doğru":"Yanlış";
+  if(Math.random()>0.5){score+=10;update();}
+}
+function reflex(){score+=5;update();}
+function luck(){if(Math.random()>0.5){score+=10;update();}}
+
+/* BOSS */
+function hitBoss(){
+  hp-=10;
+  if(hp<=0){
+    score+=50;
+    hp=100;
+  }
+  update();
 }
 
-/* REFLEX */
-function refStart(){
-  setTimeout(()=>{
-    document.getElementById("click").style.display="block";
-    start=Date.now();
-  },1000+Math.random()*2000);
-}
-function refClick(){
-  document.getElementById("g2").innerText=
-  Date.now()-start+" ms";
-}
-
-/* LUCK */
-function luck(){
-  document.getElementById("g3").innerText=
-  Math.random()<0.5?"Kaybettin":"Kazandın";
-}
-
-/* MEMORY */
-function mem(){
-  let w=["kedi","araba","uzay"];
-  memory=w[Math.floor(Math.random()*3)];
-  alert(memory);
-}
-function memCheck(){
-  alert(document.getElementById("memIn").value==memory?"Doğru":"Yanlış");
+/* SCORE */
+function update(){
+  document.getElementById("score").innerText=score;
 }
 
 /* CHAT */
 function send(){
-  let m=document.getElementById("msg").value;
   document.getElementById("chatBox").innerHTML+=
-  "<div class='card'>"+m+"</div>";
-}
-
-/* TOOLS */
-function dice(){
-  document.getElementById("d").innerText=Math.floor(Math.random()*6)+1;
-}
-function pass(){
-  document.getElementById("p").innerText=Math.random().toString(36).slice(-8);
-}
-function addNote(){
-  let li=document.createElement("li");
-  li.innerText=document.getElementById("note").value;
-  document.getElementById("list").appendChild(li);
+  "<div class='card'>"+document.getElementById("msg").value+"</div>";
 }
 
 /* THEME */
 function theme(){
   document.body.classList.toggle("dark");
-  document.body.classList.toggle("light");
 }
 
 </script>
