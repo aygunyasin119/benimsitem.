@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>V10 ULTRA PLATFORM</title>
+<title>V3 ULTRA PLATFORM</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#f4f4f4;}
@@ -22,125 +22,176 @@ input,button{padding:10px;margin:5px;width:100%;}
 
 <body>
 
+<!-- LOGIN -->
+<div id="login" style="position:fixed;width:100%;height:100%;background:#000;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+  <h2>👥 Giriş</h2>
+  <input id="user" placeholder="kullanıcı">
+  <input id="pass" placeholder="şifre">
+  <button onclick="login()">Giriş</button>
+</div>
+
 <!-- MENU -->
 <div class="menu">
+  <button onclick="show('feed')">📱 Feed</button>
   <button onclick="show('games')">🎮 Oyunlar</button>
-  <button onclick="show('boss')">🧟 Boss</button>
-  <button onclick="show('bot')">🤖 Bot</button>
-  <button onclick="show('stats')">📊 Analiz</button>
+  <button onclick="show('chat')">💬 Chat</button>
+  <button onclick="show('missions')">🎯 Görevler</button>
+  <button onclick="show('achievements')">🏆 Başarılar</button>
+  <button onclick="show('profile')">👤 Profil</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
 <div class="content">
 
+<!-- FEED -->
+<div id="feed">
+  <h1>📱 Feed</h1>
+  <input id="post"><button onclick="addPost()">Paylaş</button>
+  <div id="posts"></div>
+</div>
+
 <!-- GAMES -->
-<div id="games">
+<div id="games" style="display:none">
   <h1>🎮 Oyunlar</h1>
 
-  <button onclick="aimGame()">🎯 Aim</button>
-  <button onclick="typingGame()">⌨️ Typing</button>
-  <button onclick="rps()">🪨 RPS</button>
+  <button onclick="guessGame()">Sayı Tahmin</button>
+  <button onclick="rps('taş')">Taş</button>
+  <button onclick="rps('kağıt')">Kağıt</button>
+  <button onclick="rps('makas')">Makas</button>
+  <button onclick="aim()">Hedef Vur</button>
 
   <p id="gameRes"></p>
 </div>
 
-<!-- BOSS -->
-<div id="boss" style="display:none">
-  <h1>🧟 Boss Fight</h1>
-
-  <p>Boss HP: <span id="hp">100</span></p>
-  <button onclick="hitBoss()">Vur</button>
+<!-- CHAT -->
+<div id="chat" style="display:none">
+  <h1>💬 Chat</h1>
+  <input id="msg"><button onclick="send()">Gönder</button>
+  <div id="chatBox"></div>
 </div>
 
-<!-- BOT -->
-<div id="bot" style="display:none">
-  <h1>🤖 Bot</h1>
+<!-- MISSIONS -->
+<div id="missions" style="display:none">
+  <h1>🎯 Görevler</h1>
 
-  <input id="cmd">
-  <button onclick="runBot()">Gönder</button>
-  <p id="botRes"></p>
+  <div class="card">
+    🎮 Oyun oyna +10
+    <button onclick="missionGame()">Tamamla</button>
+  </div>
+
+  <div class="card">
+    💬 Mesaj at +5
+    <button onclick="missionChat()">Tamamla</button>
+  </div>
 </div>
 
-<!-- STATS -->
-<div id="stats" style="display:none">
-  <h1>📊 Analiz</h1>
-  <button onclick="showStats()">Göster</button>
+<!-- ACHIEVEMENTS -->
+<div id="achievements" style="display:none">
+  <h1>🏆 Başarılar</h1>
+  <div id="achList"></div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" style="display:none">
+  <h1>👤 Profil</h1>
+
+  <div class="card">
+    <h2 id="name"></h2>
+    <p id="score"></p>
+  </div>
 </div>
 
 </div>
 
 <script>
 
+let currentUser="";
 let score=0;
-let bossHP=100;
-let games=0;
-let messages=0;
+let chat=[];
+let achievements=[];
+
+/* LOGIN */
+function login(){
+  currentUser=document.getElementById("user").value;
+  document.getElementById("login").style.display="none";
+  notify("Hoşgeldin "+currentUser);
+  addAch("İlk Giriş");
+}
 
 /* NAV */
 function show(id){
-  ["games","boss","bot","stats"].forEach(x=>{
-    document.getElementById(x).style.display="none";
-  });
+  ["feed","games","chat","missions","achievements","profile"]
+  .forEach(x=>document.getElementById(x).style.display="none");
   document.getElementById(id).style.display="block";
 }
 
-/* AIM GAME */
-function aimGame(){
-  games++;
-  if(Math.random()>0.6){
+/* FEED */
+function addPost(){
+  document.getElementById("posts").innerHTML+=
+  "<div class='card'>"+document.getElementById("post").value+"</div>";
+}
+
+/* GAME */
+function guessGame(){
+  let n=Math.floor(Math.random()*5);
+  if(n==2){
+    score+=10;
+    notify("+10 puan");
+  }
+}
+
+/* RPS */
+function rps(x){
+  let a=["taş","kağıt","makas"][Math.floor(Math.random()*3)];
+  if(x!=a && Math.random()>0.5){
+    score+=5;
+    notify("Kazandın +5");
+  }
+}
+
+/* AIM */
+function aim(){
+  if(Math.random()>0.7){
     score+=10;
     notify("🎯 +10");
   }
 }
 
-/* TYPING GAME */
-function typingGame(){
-  games++;
-  let word="kod";
-  let input=prompt("Yaz: "+word);
-  if(input==word){
-    score+=10;
-    notify("⌨️ +10");
+/* CHAT */
+function send(){
+  chat.push(currentUser+": "+document.getElementById("msg").value);
+  document.getElementById("chatBox").innerHTML=
+  chat.map(c=>`<div class='card'>${c}</div>`).join("");
+}
+
+/* MISSIONS */
+function missionGame(){
+  score+=10;
+  notify("Görev tamam +10");
+}
+
+function missionChat(){
+  score+=5;
+  notify("Görev tamam +5");
+}
+
+/* ACHIEVEMENTS */
+function addAch(a){
+  if(!achievements.includes(a)){
+    achievements.push(a);
+    renderAch();
   }
 }
 
-/* RPS */
-function rps(){
-  games++;
-  let a=["taş","kağıt","makas"][Math.floor(Math.random()*3)];
-  alert("Bot: "+a);
+function renderAch(){
+  document.getElementById("achList").innerHTML=
+  achievements.map(a=>`<div class='card'>🏆 ${a}</div>`).join("");
 }
 
-/* BOSS */
-function hitBoss(){
-  bossHP-=10;
-  document.getElementById("hp").innerText=bossHP;
-
-  if(bossHP<=0){
-    score+=50;
-    notify("🔥 Boss öldü +50");
-    bossHP=100;
-    document.getElementById("hp").innerText=100;
-  }
-}
-
-/* BOT */
-function runBot(){
-  messages++;
-  let c=document.getElementById("cmd").value;
-
-  if(c=="/score") document.getElementById("botRes").innerText=score;
-  else if(c=="/time") document.getElementById("botRes").innerText=new Date().toLocaleTimeString();
-  else document.getElementById("botRes").innerText="Anlamadım";
-}
-
-/* STATS */
-function showStats(){
-  alert(
-    "🎮 Oyun: "+games+
-    "\n💬 Mesaj: "+messages+
-    "\n🏆 Puan: "+score
-  );
+/* PROFILE */
+function updateProfile(){
+  document.getElementById("name").innerText=currentUser;
+  document.getElementById("score").innerText="Puan: "+score;
 }
 
 /* NOTIFY */
