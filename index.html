@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>ULTRA PLATFORM V12</title>
+<title>ULTRA PLATFORM V13</title>
 
 <style>
 body{margin:0;font-family:Arial;transition:0.3s;}
@@ -51,7 +51,8 @@ img{max-width:200px;border-radius:10px;}
   <button onclick="show('music')">🎧 Müzik</button>
   <button onclick="show('gallery')">🖼️ Galeri</button>
   <button onclick="show('profile')">👤 Profil</button>
-  <button onclick="show('inspire')">⭐ İlham</button>
+  <button onclick="show('notes')">🗒️ Notlar</button>
+  <button onclick="show('book')">📖 Kitap</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
@@ -68,13 +69,14 @@ img{max-width:200px;border-radius:10px;}
 <div id="games" style="display:none">
   <h1>🎮 Oyunlar</h1>
 
-  <button onclick="guess()">Sayı Tahmin</button>
+  <button onclick="guess()">Tahmin</button>
   <button onclick="reflex()">Refleks</button>
   <button onclick="luck()">Şans</button>
   <button onclick="typing()">Hızlı Yaz</button>
-  <button onclick="coin()">Para At</button>
-
-  <p id="g1"></p>
+  <button onclick="rps()">Taş Kağıt Makas</button>
+  <button onclick="coinFlip()">Yazı Tura</button>
+  <button onclick="mathGame()">Matematik</button>
+  <button onclick="colorGame()">Renk Oyunu</button>
 </div>
 
 <!-- CHAT -->
@@ -103,13 +105,11 @@ img{max-width:200px;border-radius:10px;}
 <div id="gallery" style="display:none">
   <h1>🖼️ Galeri</h1>
   <img src="https://picsum.photos/200/150">
-  <img src="https://picsum.photos/201/150">
 </div>
 
 <!-- PROFILE -->
 <div id="profile" style="display:none">
   <h1>👤 Profil</h1>
-
   <div class="card">
     <h2>Yasin</h2>
     <p>📧 aygunyasin123.@gmail.com</p>
@@ -118,25 +118,41 @@ img{max-width:200px;border-radius:10px;}
   </div>
 </div>
 
-<!-- INSPIRATION -->
-<div id="inspire" style="display:none">
-  <h1>⭐ İlham Aldığım Kişiler</h1>
+<!-- NOTES -->
+<div id="notes" style="display:none">
+  <h1>🗒️ Notlar</h1>
+
+  <input id="noteText" placeholder="Not yaz...">
+  <button onclick="addNote()">Ekle</button>
+
+  <div id="noteList"></div>
+</div>
+
+<!-- BOOK -->
+<div id="book" style="display:none">
+  <h1>📖 Kitap</h1>
 
   <div class="card">
-    <h3>David Goggins</h3>
-    <p>Disiplin ve mental güç örneği</p>
+    <h2>David Goggins</h2>
+
+    <p>
+      David Goggins zor bir çocukluk geçirdi.  
+      Fakirlik, baskı ve zorluklarla büyüdü.
+    </p>
+
+    <p>
+      Ama pes etmedi. Kendini geliştirdi ve Navy SEAL oldu.  
+      Dünyanın en güçlü mental dayanıklılığa sahip insanlarından biri haline geldi.
+    </p>
+
+    <p>
+      “Acıdan kaçma, içinden geç” felsefesiyle tanınır.
+      Disiplin ve mental güç üzerine konuşur.
+    </p>
+
     <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg">
   </div>
 
-  <div class="card">
-    <h3>Elon Musk</h3>
-    <p>Teknoloji ve inovasyon</p>
-  </div>
-
-  <div class="card">
-    <h3>Steve Jobs</h3>
-    <p>Basit ama güçlü tasarım</p>
-  </div>
 </div>
 
 </div>
@@ -160,37 +176,54 @@ function login(){
 
 /* NAV */
 function show(id){
-  ["feed","games","chat","boss","music","gallery","profile","inspire"]
+  ["feed","games","chat","boss","music","gallery","profile","notes","book"]
   .forEach(x=>document.getElementById(x).style.display="none");
+
   document.getElementById(id).style.display="block";
 }
 
-/* FEED */
-function addPost(){
-  document.getElementById("posts").innerHTML+=
-  "<div class='card'>"+document.getElementById("post").value+"</div>";
+/* SCORE SYSTEM */
+function update(){
+  document.getElementById("score").innerText=score;
 }
 
 /* GAMES */
 function guess(){if(Math.random()>0.5){score+=10;update();}}
 function reflex(){score+=5;update();}
 function luck(){if(Math.random()>0.5){score+=10;update();}}
+function typing(){if(prompt("kod")=="kod"){score+=10;update();}}
 
-function typing(){
-  let w="kod";
-  let x=prompt("Yaz: "+w);
-  if(x==w){score+=10;update();}
+function rps(){
+  let o=["taş","kağıt","makas"];
+  let b=o[Math.floor(Math.random()*3)];
+  let u=prompt("taş/kağıt/makas");
+
+  if(u!=b) score+=10;
+  update();
 }
 
-function coin(){
-  let r=Math.random();
-  alert(r>0.5?"Yazı":"Tura");
+function coinFlip(){
+  if(Math.random()<0.5) score+=5;
+  update();
 }
 
-/* BOSS */
-function hitBoss(){
-  hp-=10;
-  if(hp<=0){score+=50;hp=100;}
+function mathGame(){
+  let a=Math.floor(Math.random()*10);
+  let b=Math.floor(Math.random()*10);
+
+  if(prompt(a+"+"+b)==a+b){
+    score+=10;
+  }
+  update();
+}
+
+function colorGame(){
+  let c=["kırmızı","mavi","yeşil"];
+  let p=c[Math.floor(Math.random()*3)];
+
+  if(prompt("renk?")==p){
+    score+=10;
+  }
   update();
 }
 
@@ -200,10 +233,38 @@ function send(){
   "<div class='card'>"+document.getElementById("msg").value+"</div>";
 }
 
-/* SCORE */
-function update(){
-  document.getElementById("score").innerText=score;
+/* BOSS */
+function hitBoss(){
+  hp-=10;
+  if(hp<=0){score+=50;hp=100;}
+  update();
 }
+
+/* NOTES */
+let notes=JSON.parse(localStorage.getItem("notes"))||[];
+
+function addNote(){
+  let n=document.getElementById("noteText").value;
+  notes.unshift(n);
+  localStorage.setItem("notes",JSON.stringify(notes));
+  renderNotes();
+}
+
+function renderNotes(){
+  document.getElementById("noteList").innerHTML=
+  notes.map((n,i)=>
+  `<div class='card'>${n}
+  <button onclick="delNote(${i})">Sil</button></div>`
+  ).join("");
+}
+
+function delNote(i){
+  notes.splice(i,1);
+  localStorage.setItem("notes",JSON.stringify(notes));
+  renderNotes();
+}
+
+renderNotes();
 
 /* THEME */
 function theme(){
