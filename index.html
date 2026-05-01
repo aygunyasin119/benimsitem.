@@ -2,46 +2,42 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>ULTRA PLATFORM</title>
+<title>V3 ULTRA PLATFORM</title>
 
 <style>
-body{margin:0;font-family:Arial;transition:0.3s;}
-.light{background:#f4f4f4;color:#000;}
-.dark{background:#1e1e1e;color:#fff;}
+body{margin:0;font-family:Arial;background:#f4f4f4;}
+.dark{background:#1e1e1e;color:white;}
 
-.menu{
-  position:fixed;width:200px;height:100vh;
-  background:#111;padding-top:20px;
-}
-.menu button{
-  width:100%;padding:10px;background:none;
-  color:white;border:none;cursor:pointer;
-}
+.menu{position:fixed;width:200px;height:100vh;background:#111;padding:10px;}
+.menu button{width:100%;padding:10px;color:white;background:none;border:none;cursor:pointer;}
 .menu button:hover{background:#1abc9c;}
 
 .content{margin-left:210px;padding:20px;}
-
-.card{
-  background:#fff;padding:15px;margin:10px 0;
-  border-radius:10px;
-}
-.dark .card{background:#333;color:white;}
+.card{background:white;padding:10px;margin:10px;border-radius:10px;}
+.dark .card{background:#333;}
 
 input,button{padding:10px;margin:5px;width:100%;}
 </style>
 </head>
 
-<body class="light">
+<body>
+
+<!-- LOGIN -->
+<div id="login" style="position:fixed;width:100%;height:100%;background:#000;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+  <h2>👥 Giriş</h2>
+  <input id="user" placeholder="kullanıcı">
+  <input id="pass" placeholder="şifre">
+  <button onclick="login()">Giriş</button>
+</div>
 
 <!-- MENU -->
 <div class="menu">
   <button onclick="show('feed')">📱 Feed</button>
   <button onclick="show('games')">🎮 Oyunlar</button>
   <button onclick="show('chat')">💬 Chat</button>
-  <button onclick="show('music')">🎵 Müzik</button>
-  <button onclick="show('gallery')">🖼️ Galeri</button>
+  <button onclick="show('missions')">🎯 Görevler</button>
+  <button onclick="show('achievements')">🏆 Başarılar</button>
   <button onclick="show('profile')">👤 Profil</button>
-  <button onclick="show('tools')">🗒️ Araçlar</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
@@ -58,16 +54,13 @@ input,button{padding:10px;margin:5px;width:100%;}
 <div id="games" style="display:none">
   <h1>🎮 Oyunlar</h1>
 
-  🎯 <input id="guess"><button onclick="guess()">Tahmin</button><p id="g1"></p>
+  <button onclick="guessGame()">Sayı Tahmin</button>
+  <button onclick="rps('taş')">Taş</button>
+  <button onclick="rps('kağıt')">Kağıt</button>
+  <button onclick="rps('makas')">Makas</button>
+  <button onclick="aim()">Hedef Vur</button>
 
-  ⚡ <button onclick="refStart()">Refleks</button>
-  <button id="click" onclick="refClick()" style="display:none">Tıkla</button>
-  <p id="g2"></p>
-
-  🎲 <button onclick="luck()">Şans</button><p id="g3"></p>
-
-  🧠 <button onclick="mem()">Hafıza</button>
-  <input id="memIn"><button onclick="memCheck()">Kontrol</button>
+  <p id="gameRes"></p>
 </div>
 
 <!-- CHAT -->
@@ -77,136 +70,147 @@ input,button{padding:10px;margin:5px;width:100%;}
   <div id="chatBox"></div>
 </div>
 
-<!-- MUSIC -->
-<div id="music" style="display:none">
-  <h1>🎵 Müzik</h1>
+<!-- MISSIONS -->
+<div id="missions" style="display:none">
+  <h1>🎯 Görevler</h1>
 
-  <audio controls>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-  </audio>
+  <div class="card">
+    🎮 Oyun oyna +10
+    <button onclick="missionGame()">Tamamla</button>
+  </div>
+
+  <div class="card">
+    💬 Mesaj at +5
+    <button onclick="missionChat()">Tamamla</button>
+  </div>
 </div>
 
-<!-- GALLERY -->
-<div id="gallery" style="display:none">
-  <h1>🖼️ Galeri</h1>
-
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
-  style="width:200px;border-radius:10px;">
+<!-- ACHIEVEMENTS -->
+<div id="achievements" style="display:none">
+  <h1>🏆 Başarılar</h1>
+  <div id="achList"></div>
 </div>
 
 <!-- PROFILE -->
 <div id="profile" style="display:none">
   <h1>👤 Profil</h1>
 
-  <div class="card" style="text-align:center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
-    style="width:120px;height:120px;border-radius:50%;">
-
-    <h2>Halil Yasin Aygün</h2>
-    <p>📧 aygunyasin123.@gmail.com</p>
-    <p>🎂 18</p>
-    <p>🎓 Öğrenci</p>
+  <div class="card">
+    <h2 id="name"></h2>
+    <p id="score"></p>
   </div>
-</div>
-
-<!-- TOOLS -->
-<div id="tools" style="display:none">
-  <h1>🗒️ Araçlar</h1>
-
-  🎲 <button onclick="dice()">Zar</button><p id="d"></p>
-
-  🔐 <button onclick="pass()">Şifre</button><p id="p"></p>
-
-  📝 <input id="note"><button onclick="addNote()">Not</button>
-  <ul id="list"></ul>
 </div>
 
 </div>
 
 <script>
 
-let posts=[];
-let memory="";
-let start;
+let currentUser="";
 let score=0;
+let chat=[];
+let achievements=[];
+
+/* LOGIN */
+function login(){
+  currentUser=document.getElementById("user").value;
+  document.getElementById("login").style.display="none";
+  notify("Hoşgeldin "+currentUser);
+  addAch("İlk Giriş");
+}
 
 /* NAV */
 function show(id){
-  ["feed","games","chat","music","gallery","profile","tools"]
+  ["feed","games","chat","missions","achievements","profile"]
   .forEach(x=>document.getElementById(x).style.display="none");
   document.getElementById(id).style.display="block";
 }
 
 /* FEED */
 function addPost(){
-  posts.unshift(document.getElementById("post").value);
-  render();
+  document.getElementById("posts").innerHTML+=
+  "<div class='card'>"+document.getElementById("post").value+"</div>";
 }
-function render(){
-  document.getElementById("posts").innerHTML=
-  posts.map(p=>`<div class="card">${p}</div>`).join("");
-}
-render();
 
 /* GAME */
-function guess(){
-  let n=Math.floor(Math.random()*10);
-  document.getElementById("g1").innerText=
-  (document.getElementById("guess").value==n)?"Doğru":"Yanlış";
+function guessGame(){
+  let n=Math.floor(Math.random()*5);
+  if(n==2){
+    score+=10;
+    notify("+10 puan");
+  }
 }
 
-/* REFLEX */
-function refStart(){
-  setTimeout(()=>{
-    document.getElementById("click").style.display="block";
-    start=Date.now();
-  },1000+Math.random()*2000);
-}
-function refClick(){
-  document.getElementById("g2").innerText=
-  Date.now()-start+" ms";
+/* RPS */
+function rps(x){
+  let a=["taş","kağıt","makas"][Math.floor(Math.random()*3)];
+  if(x!=a && Math.random()>0.5){
+    score+=5;
+    notify("Kazandın +5");
+  }
 }
 
-/* LUCK */
-function luck(){
-  document.getElementById("g3").innerText=
-  Math.random()<0.5?"Kaybettin":"Kazandın";
-}
-
-/* MEMORY */
-function mem(){
-  let w=["kedi","araba","uzay"];
-  memory=w[Math.floor(Math.random()*3)];
-  alert(memory);
-}
-function memCheck(){
-  alert(document.getElementById("memIn").value==memory?"Doğru":"Yanlış");
+/* AIM */
+function aim(){
+  if(Math.random()>0.7){
+    score+=10;
+    notify("🎯 +10");
+  }
 }
 
 /* CHAT */
 function send(){
-  let m=document.getElementById("msg").value;
-  document.getElementById("chatBox").innerHTML+=
-  "<div class='card'>"+m+"</div>";
+  chat.push(currentUser+": "+document.getElementById("msg").value);
+  document.getElementById("chatBox").innerHTML=
+  chat.map(c=>`<div class='card'>${c}</div>`).join("");
 }
 
-/* TOOLS */
-function dice(){
-  document.getElementById("d").innerText=Math.floor(Math.random()*6)+1;
+/* MISSIONS */
+function missionGame(){
+  score+=10;
+  notify("Görev tamam +10");
 }
-function pass(){
-  document.getElementById("p").innerText=Math.random().toString(36).slice(-8);
+
+function missionChat(){
+  score+=5;
+  notify("Görev tamam +5");
 }
-function addNote(){
-  let li=document.createElement("li");
-  li.innerText=document.getElementById("note").value;
-  document.getElementById("list").appendChild(li);
+
+/* ACHIEVEMENTS */
+function addAch(a){
+  if(!achievements.includes(a)){
+    achievements.push(a);
+    renderAch();
+  }
+}
+
+function renderAch(){
+  document.getElementById("achList").innerHTML=
+  achievements.map(a=>`<div class='card'>🏆 ${a}</div>`).join("");
+}
+
+/* PROFILE */
+function updateProfile(){
+  document.getElementById("name").innerText=currentUser;
+  document.getElementById("score").innerText="Puan: "+score;
+}
+
+/* NOTIFY */
+function notify(t){
+  let d=document.createElement("div");
+  d.innerText=t;
+  d.style.position="fixed";
+  d.style.bottom="10px";
+  d.style.right="10px";
+  d.style.background="#1abc9c";
+  d.style.color="white";
+  d.style.padding="10px";
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),2000);
 }
 
 /* THEME */
 function theme(){
   document.body.classList.toggle("dark");
-  document.body.classList.toggle("light");
 }
 
 </script>
