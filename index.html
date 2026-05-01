@@ -2,61 +2,32 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>FINAL PLATFORM</title>
+<title>ULTRA PLATFORM</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  transition:0.3s;
-}
-
-/* THEME */
+body{margin:0;font-family:Arial;transition:0.3s;}
 .light{background:#f4f4f4;color:#000;}
 .dark{background:#1e1e1e;color:#fff;}
 
-/* MENU */
 .menu{
-  position:fixed;
-  width:200px;
-  height:100vh;
-  background:#111;
-  padding-top:20px;
+  position:fixed;width:200px;height:100vh;
+  background:#111;padding-top:20px;
 }
-
 .menu button{
-  width:100%;
-  padding:10px;
-  background:none;
-  color:white;
-  border:none;
-  cursor:pointer;
+  width:100%;padding:10px;background:none;
+  color:white;border:none;cursor:pointer;
 }
+.menu button:hover{background:#1abc9c;}
 
-.menu button:hover{
-  background:#1abc9c;
-}
-
-/* CONTENT */
-.content{
-  margin-left:210px;
-  padding:20px;
-}
+.content{margin-left:210px;padding:20px;}
 
 .card{
-  background:#fff;
-  padding:15px;
-  margin:10px 0;
+  background:#fff;padding:15px;margin:10px 0;
   border-radius:10px;
 }
-
 .dark .card{background:#333;color:white;}
 
-input,button{
-  padding:10px;
-  margin:5px;
-  width:100%;
-}
+input,button{padding:10px;margin:5px;width:100%;}
 </style>
 </head>
 
@@ -66,9 +37,11 @@ input,button{
 <div class="menu">
   <button onclick="show('feed')">📱 Feed</button>
   <button onclick="show('games')">🎮 Oyunlar</button>
-  <button onclick="show('tools')">🧰 Araçlar</button>
-  <button onclick="show('robot')">🤖 Robot</button>
-  <button onclick="show('about')">👤 Profil</button>
+  <button onclick="show('chat')">💬 Chat</button>
+  <button onclick="show('music')">🎵 Müzik</button>
+  <button onclick="show('gallery')">🖼️ Galeri</button>
+  <button onclick="show('profile')">👤 Profil</button>
+  <button onclick="show('tools')">🗒️ Araçlar</button>
   <button onclick="theme()">🌙 Tema</button>
 </div>
 
@@ -77,10 +50,7 @@ input,button{
 <!-- FEED -->
 <div id="feed">
   <h1>📱 Feed</h1>
-
-  <input id="post">
-  <button onclick="addPost()">Paylaş</button>
-
+  <input id="post"><button onclick="addPost()">Paylaş</button>
   <div id="posts"></div>
 </div>
 
@@ -88,171 +58,149 @@ input,button{
 <div id="games" style="display:none">
   <h1>🎮 Oyunlar</h1>
 
-  <div class="card">
-    🎯 Tahmin
-    <input id="guess">
-    <button onclick="game()">Oyna</button>
-    <p id="gRes"></p>
-  </div>
+  🎯 <input id="guess"><button onclick="guess()">Tahmin</button><p id="g1"></p>
 
-  <div class="card">
-    ⚡ Refleks
-    <button onclick="startR()">Başlat</button>
-    <button id="click" onclick="clickR()" style="display:none">Tıkla</button>
-    <p id="rRes"></p>
-  </div>
+  ⚡ <button onclick="refStart()">Refleks</button>
+  <button id="click" onclick="refClick()" style="display:none">Tıkla</button>
+  <p id="g2"></p>
 
-  <div class="card">
-    🎲 Şans
-    <button onclick="luck()">Çevir</button>
-    <p id="luck"></p>
+  🎲 <button onclick="luck()">Şans</button><p id="g3"></p>
+
+  🧠 <button onclick="mem()">Hafıza</button>
+  <input id="memIn"><button onclick="memCheck()">Kontrol</button>
+</div>
+
+<!-- CHAT -->
+<div id="chat" style="display:none">
+  <h1>💬 Chat</h1>
+  <input id="msg"><button onclick="send()">Gönder</button>
+  <div id="chatBox"></div>
+</div>
+
+<!-- MUSIC -->
+<div id="music" style="display:none">
+  <h1>🎵 Müzik</h1>
+
+  <audio controls>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+  </audio>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery" style="display:none">
+  <h1>🖼️ Galeri</h1>
+
+  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
+  style="width:200px;border-radius:10px;">
+</div>
+
+<!-- PROFILE -->
+<div id="profile" style="display:none">
+  <h1>👤 Profil</h1>
+
+  <div class="card" style="text-align:center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
+    style="width:120px;height:120px;border-radius:50%;">
+
+    <h2>Halil Yasin Aygün</h2>
+    <p>📧 aygunyasin123.@gmail.com</p>
+    <p>🎂 18</p>
+    <p>🎓 Öğrenci</p>
   </div>
 </div>
 
 <!-- TOOLS -->
 <div id="tools" style="display:none">
-  <h1>🧰 Araçlar</h1>
+  <h1>🗒️ Araçlar</h1>
 
-  🎲 <button onclick="dice()">Zar</button>
-  <p id="dice"></p>
+  🎲 <button onclick="dice()">Zar</button><p id="d"></p>
 
-  🔐 <button onclick="gen()">Şifre</button>
-  <p id="pass"></p>
+  🔐 <button onclick="pass()">Şifre</button><p id="p"></p>
 
-  📝 <input id="note">
-  <button onclick="note()">Not Ekle</button>
+  📝 <input id="note"><button onclick="addNote()">Not</button>
   <ul id="list"></ul>
-</div>
-
-<!-- ROBOT -->
-<div id="robot" style="display:none">
-  <h1>🤖 Robot</h1>
-
-  <input id="msg">
-  <button onclick="bot()">Gönder</button>
-  <p id="reply"></p>
-</div>
-
-<!-- 👤 PROFILE -->
-<div id="about" style="display:none">
-
-  <h1>👤 Profil</h1>
-
-  <div class="card" style="text-align:center">
-
-    <img 
-      src="https://upload.wikimedia.org/wikipedia/commons/3/3e/David_Goggins_2018.jpg"
-      style="width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid #1abc9c;"
-    >
-
-    <h2>Halil Yasin Aygün</h2>
-
-    <p>📧 aygunyasin123.@gmail.com</p>
-    <p>🎂 Yaş: 18</p>
-    <p>🎓 Meslek: Öğrenci</p>
-
-    <hr>
-
-    <h3>💪 İlham</h3>
-    <p>David Goggins</p>
-
-    <p style="font-size:14px;opacity:0.8">
-      Disiplin ve mental güç odaklı bir sporcu.
-    </p>
-
-  </div>
-
 </div>
 
 </div>
 
 <script>
 
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-let num = Math.floor(Math.random()*10);
+let posts=[];
+let memory="";
 let start;
+let score=0;
 
 /* NAV */
 function show(id){
-  ["feed","games","tools","robot","about"].forEach(x=>{
-    document.getElementById(x).style.display="none";
-  });
+  ["feed","games","chat","music","gallery","profile","tools"]
+  .forEach(x=>document.getElementById(x).style.display="none");
   document.getElementById(id).style.display="block";
 }
 
 /* FEED */
 function addPost(){
-  let t=document.getElementById("post").value;
-  posts.unshift({text:t});
-  localStorage.setItem("posts",JSON.stringify(posts));
+  posts.unshift(document.getElementById("post").value);
   render();
 }
-
 function render(){
-  let box=document.getElementById("posts");
-  box.innerHTML="";
-  posts.forEach(p=>{
-    box.innerHTML+="<div class='card'>"+p.text+"</div>";
-  });
+  document.getElementById("posts").innerHTML=
+  posts.map(p=>`<div class="card">${p}</div>`).join("");
 }
 render();
 
 /* GAME */
-function game(){
-  let x=document.getElementById("guess").value;
-  document.getElementById("gRes").innerText =
-  (x==num)?"Doğru 🎉":"Yanlış 😅";
-  num=Math.floor(Math.random()*10);
+function guess(){
+  let n=Math.floor(Math.random()*10);
+  document.getElementById("g1").innerText=
+  (document.getElementById("guess").value==n)?"Doğru":"Yanlış";
 }
 
 /* REFLEX */
-function startR(){
-  document.getElementById("click").style.display="none";
+function refStart(){
   setTimeout(()=>{
     document.getElementById("click").style.display="block";
     start=Date.now();
-  },Math.random()*2000+1000);
+  },1000+Math.random()*2000);
 }
-
-function clickR(){
-  document.getElementById("rRes").innerText =
-  (Date.now()-start)+" ms";
+function refClick(){
+  document.getElementById("g2").innerText=
+  Date.now()-start+" ms";
 }
 
 /* LUCK */
 function luck(){
-  document.getElementById("luck").innerText =
-  Math.random()<0.5?"😢":"🎉";
+  document.getElementById("g3").innerText=
+  Math.random()<0.5?"Kaybettin":"Kazandın";
+}
+
+/* MEMORY */
+function mem(){
+  let w=["kedi","araba","uzay"];
+  memory=w[Math.floor(Math.random()*3)];
+  alert(memory);
+}
+function memCheck(){
+  alert(document.getElementById("memIn").value==memory?"Doğru":"Yanlış");
+}
+
+/* CHAT */
+function send(){
+  let m=document.getElementById("msg").value;
+  document.getElementById("chatBox").innerHTML+=
+  "<div class='card'>"+m+"</div>";
 }
 
 /* TOOLS */
 function dice(){
-  document.getElementById("dice").innerText =
-  Math.floor(Math.random()*6)+1;
+  document.getElementById("d").innerText=Math.floor(Math.random()*6)+1;
 }
-
-function gen(){
-  document.getElementById("pass").innerText =
-  Math.random().toString(36).slice(-8);
+function pass(){
+  document.getElementById("p").innerText=Math.random().toString(36).slice(-8);
 }
-
-function note(){
-  let v=document.getElementById("note").value;
+function addNote(){
   let li=document.createElement("li");
-  li.innerText=v;
+  li.innerText=document.getElementById("note").value;
   document.getElementById("list").appendChild(li);
-}
-
-/* ROBOT */
-function bot(){
-  let m=document.getElementById("msg").value.toLowerCase();
-
-  let r="";
-  if(m.includes("merhaba")) r="Selam 😎";
-  else if(m.includes("saat")) r=new Date().toLocaleTimeString();
-  else r="Anlamadım 🤔";
-
-  document.getElementById("reply").innerText=r;
 }
 
 /* THEME */
